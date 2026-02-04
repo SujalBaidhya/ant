@@ -31,31 +31,42 @@ create_ant()
 canvas.addEventListener("mousedown", clicked)
 function gameloop() {
     requestAnimationFrame(gameloop)
-    ctx.clearRect(0,0, canvas.width, canvas.height)
-    ctx.fillText(`Score:${count}`,100,100)
-    if(level<=count/10){    
-        level++
-        create_ant()
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "rgba(0,0,0,0.5)";
+    ctx.fillRect(0, 0, canvas.width, 80);
+    ctx.font = "28px Arial Narrow";
+    ctx.fillStyle = "white";
+    ctx.fillText(`Score: ${count}`, 30, 50);
+    ctx.fillText(`Level: ${level}`, canvas.width - 180, 50);
+    ctx.textAlign = "center";
+    ctx.fillText(`Time: ${Math.max(0, seconds)}`, canvas.width / 2, 50);
+    ctx.textAlign = "left";
+    if (seconds < 0)
+    {
+        ctx.fillStyle = "rgba(0,0,0,0.7)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "white";
+        ctx.font = "64px Arial Narrow";
+        ctx.textAlign = "center";
+        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 40);
+
+        ctx.font = "32px Arial Narrow";
+        ctx.fillText(`Final Score: ${count}`, canvas.width / 2, canvas.height / 2 + 20);
+
+        ctx.textAlign = "left";
+        return;
     }
-    ctx.fillText(`Level:${level}`,canvas.width-200,100)
-    for (let i = 0; i < 10; i++) {
-        ctx.font = "40px Arial Narrow"
-        ctx.fillStyle = "black"
-        if (seconds < 0) {
-            ctx.fillText("Game Finished", canvas.width / 2-50, 100)
-            count=0
-        }
-        else{ 
-        ctx.fillText(seconds, canvas.width / 2, 100)
-        ant[i].draw(ctx)
-        ant[i].update(level)
-        ant[i].box_collision(ant)
-    } 
+    for (let i = 0; i < ant.length; i++) {
+        ant[i].draw(ctx);
+        ant[i].update(level);
+        ant[i].box_collision(ant);
     }
+
 }
 gameloop()
 setInterval(function () {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 10; i++) {
         if (!ant[i].isDead) {
             if (ant[i].direction.y == -1) {
                 ant[i].imageIndexX++
